@@ -4,12 +4,12 @@ import (
 	"math/bits"
 )
 
-func Sort(x []string) {
+func Sort[T ~string](x []T) {
 	n := len(x)
 	pdqsort(x, 0, n, bits.Len(uint(n)))
 }
 
-func IsSorted(s []string) bool {
+func IsSorted[T ~string](s []T) bool {
 	for i := len(s) - 1; i > 0; i-- {
 		if Less(s[i], s[i-1]) {
 			return false
@@ -18,13 +18,13 @@ func IsSorted(s []string) bool {
 	return true
 }
 
-type Slice []string
+type Slice[T ~string] []T
 
-func (p Slice) Len() int           { return len(p) }
-func (p Slice) Less(i, j int) bool { return Less(p[i], p[j]) }
-func (p Slice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+func (p Slice[T]) Len() int           { return len(p) }
+func (p Slice[T]) Less(i, j int) bool { return Less(p[i], p[j]) }
+func (p Slice[T]) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 
-func Less(a, b string) bool {
+func Less[T ~string](a, b T) bool {
 	for {
 		a, b = skipPrefix(a, b)
 		switch {
@@ -63,7 +63,7 @@ func Less(a, b string) bool {
 	}
 }
 
-func skipPrefix(a, b string) (string, string) {
+func skipPrefix[T ~string](a, b T) (T, T) {
 	s := min(len(a), len(b))
 	if s == 0 {
 		return a, b
@@ -84,7 +84,7 @@ func skipPrefix(a, b string) (string, string) {
 	return a[s:], b[s:]
 }
 
-func firstNonDigit(s string) (string, string) {
+func firstNonDigit[T ~string](s T) (T, T) {
 	switch {
 	case s == "":
 		return "", ""
@@ -115,7 +115,7 @@ const (
 )
 
 // lightweight version of strconv.ParseUint.
-func parseUint(s string) (uint64, bool) {
+func parseUint[T ~string](s T) (uint64, bool) {
 	var n uint64
 	for i := 0; i < len(s); i++ {
 		c := s[i]

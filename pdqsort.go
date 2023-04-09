@@ -10,7 +10,7 @@ import "math/bits"
 // C++ implementation: https://github.com/orlp/pdqsort
 // Rust implementation: https://docs.rs/pdqsort/latest/pdqsort/
 // limit is the number of allowed bad (very unbalanced) pivots before falling back to heapsort.
-func pdqsort(data []string, a, b, limit int) {
+func pdqsort[T ~string](data []T, a, b, limit int) {
 	const maxInsertion = 12
 
 	var (
@@ -81,7 +81,7 @@ func pdqsort(data []string, a, b, limit int) {
 }
 
 // insertionSortLessFunc sorts data[a:b] using insertion sort.
-func insertionSortLessFunc(data []string, a, b int) {
+func insertionSortLessFunc[T ~string](data []T, a, b int) {
 	for i := a + 1; i < b; i++ {
 		for j := i; j > a && Less(data[j], data[j-1]); j-- {
 			data[j], data[j-1] = data[j-1], data[j]
@@ -89,7 +89,7 @@ func insertionSortLessFunc(data []string, a, b int) {
 	}
 }
 
-func heapSortLessFunc(data []string, a, b int) {
+func heapSortLessFunc[T ~string](data []T, a, b int) {
 	first := a
 	lo := 0
 	hi := b - a
@@ -108,7 +108,7 @@ func heapSortLessFunc(data []string, a, b int) {
 
 // siftDownLessFunc implements the heap property on data[lo:hi].
 // first is an offset into the array where the root of the heap lies.
-func siftDownLessFunc(data []string, lo, hi, first int) {
+func siftDownLessFunc[T ~string](data []T, lo, hi, first int) {
 	root := lo
 	for {
 		child := 2*root + 1
@@ -130,7 +130,7 @@ func siftDownLessFunc(data []string, lo, hi, first int) {
 // Let p = data[pivot]
 // Moves elements in data[a:b] around, so that data[i]<p and data[j]>=p for i<newpivot and j>newpivot.
 // On return, data[newpivot] = p.
-func partitionLessFunc(data []string, a, b, pivot int) (newpivot int, alreadyPartitioned bool) {
+func partitionLessFunc[T ~string](data []T, a, b, pivot int) (newpivot int, alreadyPartitioned bool) {
 	data[a], data[pivot] = data[pivot], data[a]
 	i, j := a+1, b-1 // i and j are inclusive of the elements remaining to be partitioned
 
@@ -168,7 +168,7 @@ func partitionLessFunc(data []string, a, b, pivot int) (newpivot int, alreadyPar
 
 // partitionEqualLessFunc partitions data[a:b] into elements equal to data[pivot] followed by elements greater than data[pivot].
 // It assumed that data[a:b] does not contain elements smaller than the data[pivot].
-func partitionEqualLessFunc(data []string, a, b, pivot int) (newpivot int) {
+func partitionEqualLessFunc[T ~string](data []T, a, b, pivot int) (newpivot int) {
 	data[a], data[pivot] = data[pivot], data[a]
 	i, j := a+1, b-1 // i and j are inclusive of the elements remaining to be partitioned
 
@@ -190,7 +190,7 @@ func partitionEqualLessFunc(data []string, a, b, pivot int) (newpivot int) {
 }
 
 // partialInsertionSortLessFunc partially sorts a slice, returns true if the slice is sorted at the end.
-func partialInsertionSortLessFunc(data []string, a, b int) bool {
+func partialInsertionSortLessFunc[T ~string](data []T, a, b int) bool {
 	const (
 		maxSteps         = 5  // maximum number of adjacent out-of-order pairs that will get shifted
 		shortestShifting = 50 // don't shift any elements on short arrays
@@ -235,7 +235,7 @@ func partialInsertionSortLessFunc(data []string, a, b int) bool {
 
 // breakPatternsLessFunc scatters some elements around in an attempt to break some patterns
 // that might cause imbalanced partitions in quicksort.
-func breakPatternsLessFunc(data []string, a, b int) {
+func breakPatternsLessFunc[T ~string](data []T, a, b int) {
 	length := b - a
 	if length >= 8 {
 		random := xorshift(length)
@@ -264,7 +264,7 @@ const (
 // [0,8): chooses a static pivot.
 // [8,shortestNinther): uses the simple median-of-three method.
 // [shortestNinther,∞): uses the Tukey ninther method.
-func choosePivotLessFunc(data []string, a, b int) (pivot int, hint sortedHint) {
+func choosePivotLessFunc[T ~string](data []T, a, b int) (pivot int, hint sortedHint) {
 	const (
 		shortestNinther = 50
 		maxSwaps        = 4 * 3
@@ -301,12 +301,12 @@ func choosePivotLessFunc(data []string, a, b int) (pivot int, hint sortedHint) {
 }
 
 // medianAdjacentLessFunc finds the median of data[a - 1], data[a], data[a + 1] and stores the index into a.
-func medianAdjacentLessFunc(data []string, a int, swaps *int) int {
+func medianAdjacentLessFunc[T ~string](data []T, a int, swaps *int) int {
 	return medianLessFunc(data, a-1, a, a+1, swaps)
 }
 
 // medianLessFunc returns x where data[x] is the median of data[a],data[b],data[c], where x is a, b, or c.
-func medianLessFunc(data []string, a, b, c int, swaps *int) int {
+func medianLessFunc[T ~string](data []T, a, b, c int, swaps *int) int {
 	a, b = order2LessFunc(data, a, b, swaps)
 	b, c = order2LessFunc(data, b, c, swaps)
 	a, b = order2LessFunc(data, a, b, swaps)
@@ -314,7 +314,7 @@ func medianLessFunc(data []string, a, b, c int, swaps *int) int {
 }
 
 // order2LessFunc returns x,y where data[x] <= data[y], where x,y=a,b or x,y=b,a.
-func order2LessFunc(data []string, a, b int, swaps *int) (int, int) {
+func order2LessFunc[T ~string](data []T, a, b int, swaps *int) (int, int) {
 	if Less(data[b], data[a]) {
 		*swaps++
 		return b, a
@@ -322,7 +322,7 @@ func order2LessFunc(data []string, a, b int, swaps *int) (int, int) {
 	return a, b
 }
 
-func reverseRangeLessFunc(data []string, a, b int) {
+func reverseRangeLessFunc[T ~string](data []T, a, b int) {
 	i := a
 	j := b - 1
 	for i < j {

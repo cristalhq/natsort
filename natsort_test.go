@@ -17,7 +17,7 @@ func BenchmarkSort(b *testing.B) {
 
 func BenchmarkSortString(b *testing.B) {
 	data := bench(b, smallList, func(list []string) {
-		sort.Sort(Slice(list))
+		sort.Sort(Slice[string](list))
 	})
 	checkResult(b, data)
 }
