@@ -4,11 +4,13 @@ import (
 	"math/bits"
 )
 
+// Sort slice with natural order.
 func Sort[T ~string](x []T) {
 	n := len(x)
 	pdqsort(x, 0, n, bits.Len(uint(n)))
 }
 
+// IsSorted reports whether slice is sorted in natural order.
 func IsSorted[T ~string](s []T) bool {
 	for i := len(s) - 1; i > 0; i-- {
 		if Less(s[i], s[i-1]) {
@@ -18,12 +20,14 @@ func IsSorted[T ~string](s []T) bool {
 	return true
 }
 
+// Slice implements [sort.Interface] allowing to sort in natural order.
 type Slice[T ~string] []T
 
 func (p Slice[T]) Len() int           { return len(p) }
 func (p Slice[T]) Less(i, j int) bool { return Less(p[i], p[j]) }
 func (p Slice[T]) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 
+// Less reports whether a is less than b ordered naturally.
 func Less[T ~string](a, b T) bool {
 	for {
 		a, b = skipPrefix(a, b)

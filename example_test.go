@@ -7,7 +7,7 @@ import (
 	"github.com/cristalhq/natsort"
 )
 
-func Example() {
+func ExampleSort() {
 	files := []string{"img12.png", "img10.png", "img2.png", "img1.png"}
 
 	fmt.Println("Lexicographically:")
@@ -36,4 +36,20 @@ func Example() {
 	// img2.png
 	// img10.png
 	// img12.png
+}
+
+func ExampleIsSorted() {
+	files := []string{"img12.png", "img10.png", "img2.png", "img1.png"}
+
+	if natsort.IsSorted(files) {
+		fmt.Println("impossible!")
+	}
+
+	natsort.Sort(files)
+
+	if !natsort.IsSorted(files) {
+		fmt.Println("impossible!")
+	}
+
+	// Output:
 }

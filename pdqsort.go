@@ -2,7 +2,7 @@ package natsort
 
 import "math/bits"
 
-// Copy from stdlib sort package, adapted to []string & Less func.
+// Copy from stdlib sort package, adapted to []~string & [natsort.Less] func.
 
 // pdqsort sorts data[a:b].
 // The algorithm based on pattern-defeating quicksort(pdqsort), but without the optimizations from BlockQuicksort.
