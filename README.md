@@ -14,9 +14,11 @@ Natural sorting in Go, see [Wikipedia](https://en.wikipedia.org/wiki/Natural_sor
 * Simple API.
 * Dependency-free.
 
+See [these docs][pkg-url] for more details.
+
 ## Install
 
-Go version 1.17+
+Go version 1.18+
 
 ```
 go get github.com/cristalhq/natsort
@@ -56,10 +58,6 @@ for _, f := range files {
 ```
 
 See examples: [example_test.go](example_test.go).
-
-## Documentation
-
-See [these docs][pkg-url] for more details.
 
 ## License
 
